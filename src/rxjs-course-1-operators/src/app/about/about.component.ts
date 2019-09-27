@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {concat, interval, merge, of} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {createHttpObservable} from '../common/util';
 
 @Component({
   selector: 'about',
@@ -13,20 +14,11 @@ export class AboutComponent implements OnInit {
   }
   
   ngOnInit() {
-    const source1$ = interval(1000);
-    const source2$ = source1$.pipe(map(val => 10* val));
-    const source3$ = of('a', 'k', 'x');
-    const source4$ = of(7, 8, 9);
+    const http$ = createHttpObservable('/api/courses');
     
-    const result$ = merge(source1$, source2$);
+    const sub = http$.subscribe(console.log);
     
-    /*result$.subscribe(
-      value => console.log('*** value = ', value),
-      error => console.log('*** value = ', error),
-      () => console.log('*** completed '),
-    );*/
-    
-    result$.subscribe(console.log)
+    setTimeout(()=> sub.unsubscribe(),0);
   }
   
 }
